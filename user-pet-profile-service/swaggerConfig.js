@@ -5,7 +5,7 @@ const swaggerDefinition = {
     info: {
         title: 'Pet Health & Care Management API',
         version: '1.0.0',
-        description: 'API documentation for Pet Health & Care Management System',
+        description: 'API documentation for Veterinary Pet Health & Care Management System',
     },
     servers: [
         {
@@ -17,13 +17,13 @@ const swaggerDefinition = {
             bearerAuth: {
                 type: 'http',
                 scheme: 'bearer',
-                bearerFormat: 'JWT', // Optional, indicates that this uses JWT
+                bearerFormat: 'JWT', 
             },
         },
     },
     security: [
         {
-            bearerAuth: [], // Apply this globally to all endpoints requiring auth
+            bearerAuth: [],
         },
     ],
 };
