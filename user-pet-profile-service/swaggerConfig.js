@@ -23,14 +23,14 @@ const swaggerDefinition = {
     },
     security: [
         {
-            bearerAuth: [],
+            bearerAuth: [], 
         },
     ],
 };
 
 const options = {
     swaggerDefinition,
-    apis: ['./routes/adminRoutes.js','./routes/userRoutes.js','./routes/petRoutes.js','./routes/preferencesRoutes.js','./routes/healthRecordRoutes.js'], // Path to the API docs
+    apis: ['./routes/adminRoutes.js','./routes/userRoutes.js','./routes/petRoutes.js','./routes/preferencesRoutes.js','./routes/healthRecordRoutes.js'],
 };
 
 module.exports = swaggerJSDoc(options);
