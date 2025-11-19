@@ -1,0 +1,396 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:3000
+    description: Generated server url
+paths:
+  /api/health/pet/{petId}/nutrition/log/{logId}:
+    put:
+      tags:
+        - diet-nutrition-tracking-controller
+      operationId: updateNutritionLog
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: logId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  format: date-time
+                food:
+                  type: string
+                calories:
+                  type: number
+                  format: double
+                fat:
+                  type: number
+                  format: double
+                fiber:
+                  type: number
+                  format: double
+                carbohydrates:
+                  type: number
+                  format: double
+                proteins:
+                  type: number
+                  format: double
+                weight:
+                  type: number
+                  format: double
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+    delete:
+      tags:
+        - diet-nutrition-tracking-controller
+      operationId: deleteNutritionLog
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: logId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/health/pet/{petId}/activity/log/{logId}:
+    put:
+      tags:
+        - activity-exercise-tracking-controller
+      operationId: updateActivityLog
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: logId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                activity:
+                  type: string
+                duration:
+                  type: string
+                distance:
+                  type: string
+                date:
+                  type: string
+                  format: date-time
+
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+    delete:
+      tags:
+        - activity-exercise-tracking-controller
+      operationId: deleteActivityLog
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: logId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/health/pet/{petId}/nutrition/log:
+    post:
+      tags:
+        - diet-nutrition-tracking-controller
+      operationId: addNutritionLog
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  format: date-time
+                food:
+                  type: string
+                calories:
+                  type: number
+                  format: double
+                fat:
+                  type: number
+                  format: double
+                fiber:
+                  type: number
+                  format: double
+                carbohydrates:
+                  type: number
+                  format: double
+                weight:
+                  type: number
+                  format: double
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/health/pet/{petId}/activity/log:
+    post:
+      tags:
+        - activity-exercise-tracking-controller
+      operationId: addActivityLog
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              # $ref: "#/components/schemas/ActivityLogDTO"
+              type: object
+              properties:
+                activity:
+                  type: string
+                duration:
+                  type: string
+                distance:
+                  type: string
+                date:
+                  type: string
+                  format: date-time
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/health/user/{userId}/dashboard:
+    get:
+      tags:
+        - health-insights-controller
+      operationId: getUserDashBoard
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/health/pet/{petId}/nutrition/recommendations:
+    get:
+      tags:
+        - diet-nutrition-tracking-controller
+      operationId: getNutritionRecommendations
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/health/pet/{petId}/nutrition/logs:
+    get:
+      tags:
+        - diet-nutrition-tracking-controller
+      operationId: getNutritionLogs
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/health/pet/{petId}/health/insights:
+    get:
+      tags:
+        - health-insights-controller
+      operationId: getHealthInsights
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/health/pet/{petId}/activity/recommendations:
+    get:
+      tags:
+        - activity-exercise-tracking-controller
+      operationId: getActivityRecommendations
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/health/pet/{petId}/activity/logs:
+    get:
+      tags:
+        - activity-exercise-tracking-controller
+      operationId: getActivityLogs
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+
+components:
+  schemas:
+    NutritionLogDTO:
+      type: object
+      properties:
+        petId:
+          type: string
+        logId:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date-time
+        food:
+          type: string
+        calories:
+          type: number
+          format: double
+        protein:
+          type: number
+          format: double
+        fat:
+          type: number
+          format: double
+        fiber:
+          type: number
+          format: double
+        carbohydrates:
+          type: number
+          format: double
+        weight:
+          type: number
+          format: double
+    ActivityLogDTO:
+      type: object
+      properties:
+        logId:
+          type: string
+          format: uuid
+        activity:
+          type: string
+        duration:
+          type: string
+        distance:
+          type: string
+        date:
+          type: string
+
+
+
+
+
+

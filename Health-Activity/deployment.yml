@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: activity-exercise-tracking
+  labels:
+    app: activity-exercise-tracking
+spec:
+  replicas: 3  #  number of replicas
+  selector:
+    matchLabels:
+      app: activity-exercise-tracking
+  template:
+    metadata:
+      labels:
+        app: activity-exercise-tracking
+    spec:
+      containers:
+        - name: activity-exercise-tracking
+          image: <your-image-repo>/activity-exercise-tracking:latest  #  image repo
+          ports:
+            - containerPort: 3000  # port
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: activity-exercise-service
+  labels:
+    app: activity-exercise-tracking
+spec:
+  selector:
+    app: activity-exercise-tracking
+  ports:
+    - protocol: TCP
+      port: 80  # Service port
+      targetPort: 3000  # The port your app listens on inside the container
+  type: ClusterIP  # Adjust to NodePort or LoadBalancer if external access is needed
