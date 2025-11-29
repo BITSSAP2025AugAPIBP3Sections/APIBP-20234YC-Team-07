@@ -1,4 +1,7 @@
 # Team 07
+Routes:
+gql:  /graphql-health-records
+swaggerdocs: /api-docs
 
 # Veterinary Health & Care Management Platform
 
