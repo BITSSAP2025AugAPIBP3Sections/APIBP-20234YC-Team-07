@@ -15,11 +15,13 @@ const router = express.Router();
  * @swagger
  * /api/preferences:
  *   get:
- *     summary: Get the current user's preferences
+ *     summary: Get the current user's preferences, Used by  [Admin, User]
  *     description: Fetch the preferences set by the currently authenticated user.
  *     tags: [Preferences]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Authenticated
  *     responses:
  *       200:
  *         description: Successfully fetched the user's preferences
@@ -60,11 +62,13 @@ router.get('/', authMiddleware, preferencesController.getUserPreferences);
  * @swagger
  * /api/preferences:
  *   put:
- *     summary: Update the current user's preferences
+ *     summary: Update the current user's preferences Used by  [Admin, User]
  *     description: Update the preferences for the currently authenticated user.
  *     tags: [Preferences]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Authenticated
  *     requestBody:
  *       required: true
  *       content:
@@ -126,7 +130,7 @@ router.get('/', authMiddleware, preferencesController.getUserPreferences);
  *                       type: string
  *                       description: The unique identifier for the preferences
  *       400:
- *         description: Bad request, invalid data provided
+ *         description: Bad request, Missing required fields
  *       401:
  *         description: Unauthorized, invalid or missing token
  *       500:
@@ -138,11 +142,13 @@ router.put('/', authMiddleware, preferencesController.updateUserPreferences);
  * @swagger
  * /api/preferences:
  *   delete:
- *     summary: Reset the current user's preferences to default
+ *     summary: Reset the current user's preferences to default Used by  [Admin, User]
  *     description: Reset all preferences for the currently authenticated user to the default settings.
  *     tags: [Preferences]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Authenticated
  *     responses:
  *       200:
  *         description: Successfully reset the user's preferences to default

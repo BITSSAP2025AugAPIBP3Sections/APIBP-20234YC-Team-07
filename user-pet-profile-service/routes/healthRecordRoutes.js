@@ -17,11 +17,13 @@ const router = express.Router({ mergeParams: true });
  * @swagger
  * /api/health-records/{petId}:
  *   post:
- *     summary: Add a new health record for a pet
+ *     summary: Add a new health record for a pet Used by  [Admin]
  *     description: Add a health record for the pet with the provided pet ID.
  *     tags: [Health Records]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Authenticated
  *     parameters:
  *       - in: path
  *         name: petId
@@ -88,7 +90,7 @@ const router = express.Router({ mergeParams: true });
  *                       format: date
  *                       description: Date of next due vaccine or appointment
  *       400:
- *         description: Bad request, invalid data provided
+ *         description: Bad request, Invalid <FieldName> Value entered
  *       401:
  *         description: Unauthorized, invalid or missing token
  *       404:
@@ -102,11 +104,13 @@ router.post('/:petId', authMiddleware, healthRecordController.addHealthRecord);
  * @swagger
  * /api/health-records/{petId}:
  *   get:
- *     summary: Get all health records for a pet
+ *     summary: Get all health records for a pet Used by  [Admin, User]
  *     description: Get all health records for the pet with the provided pet ID.
  *     tags: [Health Records]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Authenticated
  *     parameters:
  *       - in: path
  *         name: petId
@@ -145,7 +149,7 @@ router.post('/:petId', authMiddleware, healthRecordController.addHealthRecord);
  *                     format: date
  *                     description: Date of next due vaccine or appointment
  *       400:
- *         description: Bad request
+ *         description: Bad request, Invalid <FieldName> Value entered
  *       401:
  *         description: Unauthorized, invalid or missing token
  *       404:
@@ -157,13 +161,15 @@ router.get('/:petId', authMiddleware, healthRecordController.getAllHealthRecords
 
 /**
  * @swagger
- * /api/health-records/{petId}/{recordId}:
+ * /api/health-records/{petId}/record/{recordId}:
  *   get:
- *     summary: Get a specific health record by record ID
+ *     summary: Get a specific health record by record ID Used by  [Admin, User]
  *     description: Get the health record with the provided record ID for the specified pet.
  *     tags: [Health Records]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Authenticated
  *     parameters:
  *       - in: path
  *         name: petId
@@ -210,17 +216,19 @@ router.get('/:petId', authMiddleware, healthRecordController.getAllHealthRecords
  *       500:
  *         description: Server error
  */
-router.get('/:petId/:recordId', authMiddleware, healthRecordController.getHealthRecordById);
+router.get('/:petId/record/:recordId', authMiddleware, healthRecordController.getHealthRecordById);
 
 /**
  * @swagger
- * /api/health-records/{petId}/{recordId}:
+ * /api/health-records/{petId}/record/{recordId}:
  *   put:
- *     summary: Update a specific health record by record ID
+ *     summary: Update a specific health record by record ID Used by  [Admin]
  *     description: Update the health record with the provided record ID for the specified pet.
  *     tags: [Health Records]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Authenticated
  *     parameters:
  *       - in: path
  *         name: petId
@@ -299,17 +307,19 @@ router.get('/:petId/:recordId', authMiddleware, healthRecordController.getHealth
  *       500:
  *         description: Server error
  */
-router.put('/:petId/:recordId', authMiddleware, healthRecordController.updateHealthRecord);
+router.put('/:petId/record/:recordId', authMiddleware, healthRecordController.updateHealthRecord);
 
 /**
  * @swagger
- * /api/health-records/{petId}/{recordId}:
+ * /api/health-records/{petId}/record/{recordId}:
  *   delete:
- *     summary: Delete a specific health record by record ID
+ *     summary: Delete a specific health record by record ID Used by  [Admin]
  *     description: Delete the health record with the provided record ID for the specified pet.
  *     tags: [Health Records]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Authenticated
  *     parameters:
  *       - in: path
  *         name: petId
@@ -341,6 +351,6 @@ router.put('/:petId/:recordId', authMiddleware, healthRecordController.updateHea
  *       500:
  *         description: Server error
  */
-router.delete('/:petId/:recordId', authMiddleware, healthRecordController.deleteHealthRecord);
+router.delete('/:petId/record/:recordId', authMiddleware, healthRecordController.deleteHealthRecord);
 
 module.exports = router;

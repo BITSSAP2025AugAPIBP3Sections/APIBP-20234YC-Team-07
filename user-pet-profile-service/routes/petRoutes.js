@@ -15,10 +15,12 @@ const router = express.Router();
  * @swagger
  * /api/pets:
  *   post:
- *     summary: Add a new pet
+ *     summary: Add a new pet \n accessible by [Admin]
  *     tags: [Pets]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Authenticated
  *     requestBody:
  *       required: true
  *       content:
@@ -41,7 +43,8 @@ const router = express.Router();
  *       201:
  *         description: Pet added successfully
  *       400:
- *         description: Invalid input
+ *         description: Invalid input, missing required fields
+ * 
  *       500:
  *         description: Server error
  */
@@ -51,10 +54,12 @@ router.post('/', authMiddleware, petController.addPet);
  * @swagger
  * /api/pets:
  *   get:
- *     summary: Get all pets for the authenticated user
+ *     summary: Get all pets for the authenticated user \n accessible by  [Admin]
  *     tags: [Pets]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Authenticated
  *     responses:
  *       200:
  *         description: A list of pets owned by the user
@@ -86,10 +91,12 @@ router.get('/', authMiddleware, petController.getAllPetsForUser);
  * @swagger
  * /api/pets/{petId}:
  *   get:
- *     summary: Get details of a specific pet by ID
+ *     summary: Get details of a specific pet by ID \n accessible by  [Admin, User]
  *     tags: [Pets]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Authenticated
  *     parameters:
  *       - in: path
  *         name: petId
@@ -113,10 +120,12 @@ router.get('/:petId', authMiddleware, petController.getPetById);
  * @swagger
  * /api/pets/{petId}:
  *   put:
- *     summary: Update details of a specific pet
+ *     summary: Update details of a specific pet\n accessible by  [Admin]
  *     tags: [Pets]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Authenticated
  *     parameters:
  *       - in: path
  *         name: petId
@@ -155,10 +164,12 @@ router.put('/:petId', authMiddleware, petController.updatePet);
  * @swagger
  * /api/pets/{petId}:
  *   delete:
- *     summary: Delete a specific pet
+ *     summary: Delete a specific pet \n accessible by [Admin]
  *     tags: [Pets]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Authenticated
  *     parameters:
  *       - in: path
  *         name: petId

@@ -22,6 +22,8 @@ const router = express.Router();
  *     tags: [Admin]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Admin
  *     responses:
  *       200:
  *         description: List of all users
@@ -46,6 +48,8 @@ router.get('/users', adminMiddleware, userController.getAllUsers);  // View all 
  *     tags: [Admin]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Admin
  *     parameters:
  *       - in: path
  *         name: userId
@@ -73,6 +77,8 @@ router.delete('/users/:userId', adminMiddleware, userController.deleteUser);  //
  *     tags: [Admin]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Admin
  *     responses:
  *       200:
  *         description: List of all pets
@@ -97,6 +103,8 @@ router.get('/pets', adminMiddleware, petController.getAllPets);  // View all pet
  *     tags: [Admin]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Admin
  *     parameters:
  *       - in: path
  *         name: petId
@@ -124,6 +132,8 @@ router.delete('/pets/:petId', adminMiddleware, petController.deletePet);  // Del
  *     tags: [Admin]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Admin
  *     responses:
  *       200:
  *         description: List of all health records
@@ -142,12 +152,14 @@ router.get('/health-records', adminMiddleware, healthRecordController.getAllHeal
 
 /**
  * @openapi
- * /api/admin/health-records/{petId}/{recordId}:
+ * /api/admin/health-records/{petId}/record/{recordId}:
  *   delete:
  *     summary: Delete a specific health record for a pet (Admin only)
  *     tags: [Admin]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Admin
  *     parameters:
  *       - in: path
  *         name: petId
@@ -203,7 +215,7 @@ router.get('/health-records', adminMiddleware, healthRecordController.getAllHeal
  *                   type: string
  *                   example: Server error
  */
-router.delete('/health-records/:petId/:recordId', adminMiddleware, healthRecordController.deleteHealthRecordForAdmin);  // Delete a health record
+router.delete('/health-records/:petId/record/:recordId', adminMiddleware, healthRecordController.deleteHealthRecordForAdmin);  // Delete a health record
 
 /**
  * @openapi
@@ -286,6 +298,8 @@ router.delete('/health-records/:petId/:recordId', adminMiddleware, healthRecordC
  *     tags: [Admin]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Admin
  *     requestBody:
  *       required: true
  *       content:

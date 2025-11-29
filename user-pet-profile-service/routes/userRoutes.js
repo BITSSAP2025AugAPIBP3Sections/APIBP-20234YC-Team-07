@@ -17,6 +17,8 @@ const router = express.Router();
  *   post:
  *     summary: Register a new user
  *     tags: [User]
+ *     x-roles:
+ *       - Public
  *     requestBody:
  *       required: true
  *       content:
@@ -46,6 +48,8 @@ router.post('/register', userController.registerUser);
  *   post:
  *     summary: Login user
  *     tags: [User]
+ *     x-roles:
+ *       - Public
  *     requestBody:
  *       required: true
  *       content:
@@ -75,6 +79,8 @@ router.post('/login', userController.loginUser);
  *     tags: [User]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Authenticated
  *     responses:
  *       200:
  *         description: User profile fetched successfully
@@ -95,6 +101,8 @@ router.get('/profile', authMiddleware, userController.getUserProfile);
  *     tags: [User]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Authenticated
  *     requestBody:
  *       required: true
  *       content:
@@ -151,6 +159,8 @@ router.put('/profile', authMiddleware, userController.updateUserProfile);
  *     tags: [User]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Authenticated
  *     responses:
  *       200:
  *         description: User account deleted successfully
@@ -171,6 +181,8 @@ router.delete('/profile', authMiddleware, userController.deleteUserAccount);
  *     tags: [User]
  *     security:
  *       - bearerAuth: []
+ *     x-roles:
+ *       - Authenticated
  *     responses:
  *       200:
  *         description: Token is valid
