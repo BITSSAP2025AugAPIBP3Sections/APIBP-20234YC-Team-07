@@ -1,0 +1,70 @@
+name: Build and deploy to Cloud Run
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  # Set defaults; override by repository secrets or workflow-level variables
+  PROJECT_ID: ${{ secrets.GCP_PROJECT }}
+  REGION: us-central1
+  SERVICE_NAME: appointment-medication-reminders
+
+jobs:
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Build image with Cloud Build
+        run: |
+          IMAGE=gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
+          echo "Building image $IMAGE"
+          gcloud builds submit --tag "$IMAGE" ./
+
+      - name: Deploy to Cloud Run
+        env:
+          AUTH_SERVICE_URL: ${{ secrets.AUTH_SERVICE_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          SERVICE="${{ env.SERVICE_NAME }}"
+          IMAGE=gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
+          echo "Deploying $IMAGE to Cloud Run ($SERVICE)"
+
+          # Build a comma-separated env var string only if secrets are present
+          ENV_KV=""
+          if [ -n "${AUTH_SERVICE_URL:-}" ]; then
+            ENV_KV="AUTH_SERVICE_URL=${AUTH_SERVICE_URL}"
+          fi
+          if [ -n "${DATABASE_URL:-}" ]; then
+            if [ -n "$ENV_KV" ]; then
+              ENV_KV="$ENV_KV,DATABASE_URL=${DATABASE_URL}"
+            else
+              ENV_KV="DATABASE_URL=${DATABASE_URL}"
+            fi
+          fi
+
+          CMD=(gcloud run deploy "$SERVICE" --image "$IMAGE" --region "${{ env.REGION }}" --platform managed --allow-unauthenticated)
+          if [ -n "$ENV_KV" ]; then
+            CMD+=(--set-env-vars "$ENV_KV")
+          fi
+          echo "Running: ${CMD[*]}"
+          "${CMD[@]}"
+
+      - name: Print service URL
+        run: |
+          gcloud run services describe "${{ env.SERVICE_NAME }}" --region "${{ env.REGION }}" --format 'value(status.url)'
