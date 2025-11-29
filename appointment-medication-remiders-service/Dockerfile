@@ -1,18 +1,23 @@
-# Use a Python base image
 FROM python:3.12-slim
 
-# Set the working directory
+# Small, production-ready Dockerfile for FastAPI on Cloud Run
 WORKDIR /app
 
-# Copy the requirements and install dependencies
-COPY requirements.txt .
+# Prevent Python from writing .pyc files and enable unbuffered logging
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Install dependencies
+COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the application code
+# Copy application
 COPY . .
 
-# Expose the port FastAPI will run on
-EXPOSE 8000
+# Cloud Run provides the PORT environment variable; default to 8080 for local runs
+ENV PORT=8080
+EXPOSE 8080
 
-# Command to run the application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Start the app with the PORT from environment
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT}"]
+
