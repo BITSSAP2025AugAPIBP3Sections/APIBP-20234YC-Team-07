@@ -15,10 +15,10 @@ spec:
         app: activity-exercise-tracking
     spec:
       containers:
-        - name: activity-exercise-tracking
-          image: <your-image-repo>/activity-exercise-tracking:latest  #  image repo
+        - name: 
+          image: IMAGE_TAG
           ports:
-            - containerPort: 3000  # port
+            - containerPort: 30080  # port
           resources:
             limits:
               memory: "512Mi"
@@ -39,5 +39,5 @@ spec:
   ports:
     - protocol: TCP
       port: 80  # Service port
-      targetPort: 3000  # The port your app listens on inside the container
+      targetPort: 30080  # The port your app listens on inside the container
   type: ClusterIP  # Adjust to NodePort or LoadBalancer if external access is needed
