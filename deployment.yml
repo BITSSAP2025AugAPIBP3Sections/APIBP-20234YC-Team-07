@@ -15,7 +15,7 @@ spec:
         app: activity-exercise-tracking
     spec:
       containers:
-        - name: 
+        - name: activity-exercise-tracking
           image: IMAGE_TAG
           ports:
             - containerPort: 80  # port
