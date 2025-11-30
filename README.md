@@ -69,7 +69,7 @@ The **Veterinary Health & Care Management Platform** is a service-oriented syste
   
 ---
 
-**Target Users**
+## Target Users
 
 1. Pet Owners
 2. Veterinarians (Vets)
@@ -81,7 +81,7 @@ The **Veterinary Health & Care Management Platform** is a service-oriented syste
 
 ---
 
-**GraphQL Highlights (Single Endpoint)**
+## GraphQL Highlights (Single Endpoint)
 
 ```graphql
 # Core Types
