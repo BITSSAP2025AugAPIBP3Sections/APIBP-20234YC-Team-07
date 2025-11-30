@@ -85,178 +85,241 @@ The **Veterinary Health & Care Management Platform** is a service-oriented syste
 ## GraphQL Highlights (Single Endpoint)
 
 # Core Types
-type Pet {
-  id: ID!
-  name: String!
-  species: String!        # e.g. Dog, Cat
-  breed: String
-  date_of_birth: String
-  gender: String
-  owner: Owner!
-  medical_history: [MedicalRecord]
-  appointments: [Appointment]
-  activity_logs: [ActivityLog]
-  nutrition_plan: NutritionPlan
+{
+  "entities": [
+    {
+      "name": "Pet",
+      "fields": [
+        { "name": "id", "type": "ID", "required": true, "primaryKey": true },
+        { "name": "name", "type": "String", "required": true },
+        { "name": "species", "type": "String", "required": true },   // e.g. Dog, Cat
+        { "name": "breed", "type": "String", "required": false },
+        { "name": "date_of_birth", "type": "String", "required": false },
+        { "name": "gender", "type": "String", "required": false },
+        {
+          "name": "owner",
+          "type": "Owner",
+          "required": true,
+          "relation": { "type": "belongsTo", "target": "Owner" }
+        },
+        {
+          "name": "medical_history",
+          "type": "MedicalRecord[]",
+          "required": false,
+          "relation": { "type": "hasMany", "target": "MedicalRecord" }
+        },
+        {
+          "name": "appointments",
+          "type": "Appointment[]",
+          "required": false,
+          "relation": { "type": "hasMany", "target": "Appointment" }
+        },
+       {
+          "name": "activity_logs",
+          "type": "ActivityLog[]",
+          "required": false,
+          "relation": { "type": "hasMany", "target": "ActivityLog" }
+        },
+        {
+          "name": "nutrition_plan",
+          "type": "NutritionPlan",
+          "required": false,
+          "relation": { "type": "hasOne", "target": "NutritionPlan" }
+        }
+      ]
+    },
+
+    {
+      "name": "Owner",
+      "fields": [
+        { "name": "id", "type": "ID", "required": true, "primaryKey": true },
+        { "name": "name", "type": "String", "required": true },
+        { "name": "email", "type": "String", "required": true },
+        { "name": "phone", "type": "String", "required": false },
+        { "name": "address", "type": "String", "required": false },
+        {
+          "name": "pets",
+          "type": "Pet[]",
+          "required": false,
+          "relation": { "type": "hasMany", "target": "Pet" }
+        }
+      ]
+    },
+
+    {
+      "name": "Vet",
+      "fields": [
+        { "name": "id", "type": "ID", "required": true, "primaryKey": true },
+        { "name": "name", "type": "String", "required": true },
+        { "name": "email", "type": "String", "required": true },
+        { "name": "specialization", "type": "String", "required": false },
+        { "name": "clinic_name", "type": "String", "required": false },
+        { "name": "phone", "type": "String", "required": false },
+        {
+          "name": "consultations",
+          "type": "Consultation[]",
+          "required": false,
+          "relation": { "type": "hasMany", "target": "Consultation" }
+        }
+      ]
+    },
+
+    {
+      "name": "MedicalRecord",
+      "fields": [
+        { "name": "id", "type": "ID", "required": true, "primaryKey": true },
+        {
+          "name": "pet",
+          "type": "Pet",
+          "required": true,
+          "relation": { "type": "belongsTo", "target": "Pet" }
+        },
+        { "name": "visit_date", "type": "String", "required": true },
+        { "name": "diagnosis", "type": "String", "required": false },
+        { "name": "notes", "type": "String", "required": false },
+        {
+          "name": "prescribed_medications",
+          "type": "MedicationSchedule[]",
+          "required": false,
+          "relation": { "type": "hasMany", "target": "MedicationSchedule" }
+        }
+      ]
+    },
+
+    {
+      "name": "MedicationSchedule",
+      "fields": [
+        { "name": "id", "type": "ID", "required": true, "primaryKey": true },
+        {
+          "name": "pet",
+          "type": "Pet",
+          "required": true,
+          "relation": { "type": "belongsTo", "target": "Pet" }
+        },
+        { "name": "medication_name", "type": "String", "required": true },
+        { "name": "dosage", "type": "String", "required": true },       // e.g. "5mg"
+        { "name": "frequency", "type": "String", "required": true },    // e.g. "Twice a day"
+        { "name": "start_date", "type": "String", "required": true },
+        { "name": "end_date", "type": "String", "required": false },
+        { "name": "is_active", "type": "Boolean", "required": true }
+      ]
+    },
+
+    {
+      "name": "Appointment",
+      "fields": [
+        { "name": "id", "type": "ID", "required": true, "primaryKey": true },
+        {
+          "name": "pet",
+          "type": "Pet",
+          "required": true,
+          "relation": { "type": "belongsTo", "target": "Pet" }
+        },
+        {
+          "name": "owner",
+          "type": "Owner",
+          "required": true,
+          "relation": { "type": "belongsTo", "target": "Owner" }
+        },
+        {
+          "name": "vet",
+          "type": "Vet",
+          "required": false,
+          "relation": { "type": "belongsTo", "target": "Vet" }
+        },
+        { "name": "appointment_date", "type": "String", "required": true },
+        { "name": "reason", "type": "String", "required": false },
+        { "name": "status", "type": "String", "required": true },       // SCHEDULED, COMPLETED, etc.
+        { "name": "is_virtual", "type": "Boolean", "required": true }
+      ]
+    },
+
+    {
+      "name": "Consultation",
+      "fields": [
+        { "name": "id", "type": "ID", "required": true, "primaryKey": true },
+        {
+          "name": "pet",
+          "type": "Pet",
+          "required": true,
+          "relation": { "type": "belongsTo", "target": "Pet" }
+        },
+        {
+          "name": "owner",
+          "type": "Owner",
+          "required": true,
+          "relation": { "type": "belongsTo", "target": "Owner" }
+        },
+        {
+          "name": "vet",
+          "type": "Vet",
+          "required": true,
+          "relation": { "type": "belongsTo", "target": "Vet" }
+        },
+        { "name": "consultation_date", "type": "String", "required": true },
+        { "name": "mode", "type": "String", "required": true },         // VIRTUAL / IN_PERSON
+        { "name": "notes", "type": "String", "required": false },
+        { "name": "follow_up_date", "type": "String", "required": false }
+      ]
+    },
+
+    {
+      "name": "ActivityLog",
+      "fields": [
+        { "name": "id", "type": "ID", "required": true, "primaryKey": true },
+        {
+          "name": "pet",
+          "type": "Pet",
+          "required": true,
+          "relation": { "type": "belongsTo", "target": "Pet" }
+        },
+        { "name": "date", "type": "String", "required": true },
+        { "name": "activity_type", "type": "String", "required": true }, // WALK, PLAY, etc.
+        { "name": "duration_minutes", "type": "Int", "required": false },
+        { "name": "notes", "type": "String", "required": false }
+      ]
+    },
+
+    {
+      "name": "NutritionPlan",
+      "fields": [
+        { "name": "id", "type": "ID", "required": true, "primaryKey": true },
+        {
+          "name": "pet",
+          "type": "Pet",
+          "required": true,
+          "relation": { "type": "belongsTo", "target": "Pet" }
+        },
+        { "name": "diet_type", "type": "String", "required": false },
+        { "name": "daily_calories", "type": "Int", "required": false },
+        { "name": "feeding_schedule", "type": "String", "required": false },
+        { "name": "notes", "type": "String", "required": false }
+      ]
+    },
+
+    {
+      "name": "EmergencyService",
+      "fields": [
+        { "name": "id", "type": "ID", "required": true, "primaryKey": true },
+        { "name": "name", "type": "String", "required": true },
+        { "name": "contact_number", "type": "String", "required": true },
+        { "name": "address", "type": "String", "required": false },
+        { "name": "service_type", "type": "String", "required": true }  // 24x7 Clinic, Ambulance
+      ]
+    },
+
+    {
+      "name": "PetCareService",
+      "fields": [
+        { "name": "id", "type": "ID", "required": true, "primaryKey": true },
+        { "name": "name", "type": "String", "required": true },
+        { "name": "description", "type": "String", "required": false },
+        { "name": "service_type", "type": "String", "required": true }, // GROOMING, BOARDING, etc.
+        { "name": "location", "type": "String", "required": false },
+        { "name": "contact_number", "type": "String", "required": false }
+      ]
+    }
+  ]
 }
 
-type Owner {
-  id: ID!
-  name: String!
-  email: String!
-  phone: String
-  address: String
-  pets: [Pet]
-}
-
-type Vet {
-  id: ID!
-  name: String!
-  email: String!
-  specialization: String
-  clinic_name: String
-  phone: String
-  consultations: [Consultation]
-}
-
-# Health Records
-type MedicalRecord {
-  id: ID!
-  pet: Pet!
-  visit_date: String!
-  diagnosis: String
-  notes: String
-  prescribed_medications: [MedicationSchedule]
-}
-
-type MedicationSchedule {
-  id: ID!
-  pet: Pet!
-  medication_name: String!
-  dosage: String!          # e.g. "5mg", "1 tablet"
-  frequency: String!       # e.g. "Twice a day"
-  start_date: String!
-  end_date: String
-  is_active: Boolean!
-}
-
-# Appointments & Consultations
-type Appointment {
-  id: ID!
-  pet: Pet!
-  owner: Owner!
-  vet: Vet
-  appointment_date: String!
-  reason: String
-  status: String!          # e.g. "SCHEDULED", "COMPLETED", "CANCELLED"
-  is_virtual: Boolean!
-}
-
-type Consultation {
-  id: ID!
-  pet: Pet!
-  owner: Owner!
-  vet: Vet!
-  consultation_date: String!
-  mode: String!            # e.g. "VIRTUAL", "IN_PERSON"
-  notes: String
-  follow_up_date: String
-}
-
-# Activity & Nutrition
-type ActivityLog {
-  id: ID!
-  pet: Pet!
-  date: String!
-  activity_type: String!   # e.g. "WALK", "PLAY", "EXERCISE"
-  duration_minutes: Int
-  notes: String
-}
-
-type NutritionPlan {
-  id: ID!
-  pet: Pet!
-  diet_type: String        # e.g. "Weight Loss", "Puppy Diet"
-  daily_calories: Int
-  feeding_schedule: String # e.g. "2 meals a day"
-  notes: String
-}
-
-# Emergency & Services
-type EmergencyService {
-  id: ID!
-  name: String!
-  contact_number: String!
-  address: String
-  service_type: String     # e.g. "24x7 Clinic", "Ambulance"
-}
-
-type PetCareService {
-  id: ID!
-  name: String!
-  description: String
-  service_type: String     # e.g. "GROOMING", "BOARDING", "TRAINING"
-  location: String
-  contact_number: String
-}
-
-# Queries (examples)
-type Query {
-  pets: [Pet]
-  petById(id: ID!): Pet
-
-  owners: [Owner]
-  ownerById(id: ID!): Owner
-
-  vets: [Vet]
-  vetById(id: ID!): Vet
-
-  appointmentsByPet(petId: ID!): [Appointment]
-  consultationsByPet(petId: ID!): [Consultation]
-
-  emergencyServices: [EmergencyService]
-  petCareServices(service_type: String): [PetCareService]
-}
-
-# Mutations (examples)
-type Mutation {
-  createPet(
-    name: String!
-    species: String!
-    breed: String
-    date_of_birth: String
-    gender: String
-    ownerId: ID!
-  ): Pet!
-
-  createOwner(
-    name: String!
-    email: String!
-    phone: String
-    address: String
-  ): Owner!
-
-  createAppointment(
-    petId: ID!
-    ownerId: ID!
-    vetId: ID
-    appointment_date: String!
-    reason: String
-    is_virtual: Boolean!
-  ): Appointment!
-
-  createMedicalRecord(
-    petId: ID!
-    visit_date: String!
-    diagnosis: String
-    notes: String
-  ): MedicalRecord!
-
-  createMedicationSchedule(
-    petId: ID!
-    medication_name: String!
-    dosage: String!
-    frequency: String!
-    start_date: String!
-    end_date: String
-  ): MedicationSchedule!
-}
+---
