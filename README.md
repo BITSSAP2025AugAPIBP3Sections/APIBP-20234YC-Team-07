@@ -66,3 +66,197 @@ The **Veterinary Health & Care Management Platform** is a service-oriented syste
 
    * Virtual Consultations and Chat Support
    * Pet Service Recommendations and Location Assistance
+  
+---
+
+**Target Users**
+
+1. Pet Owners
+2. Veterinarians (Vets)
+3. Veterinary Clinics / Hospitals
+4. Clinic Staff / Receptionists
+5. Developers / Technical Team
+6. Data Analysts
+7. Third-Party API Providers
+
+---
+
+
+## GraphQL Highlights (Single Endpoint)
+
+# Core Types
+type Pet {
+  id: ID!
+  name: String!
+  species: String!        # e.g. Dog, Cat
+  breed: String
+  date_of_birth: String
+  gender: String
+  owner: Owner!
+  medical_history: [MedicalRecord]
+  appointments: [Appointment]
+  activity_logs: [ActivityLog]
+  nutrition_plan: NutritionPlan
+}
+
+type Owner {
+  id: ID!
+  name: String!
+  email: String!
+  phone: String
+  address: String
+  pets: [Pet]
+}
+
+type Vet {
+  id: ID!
+  name: String!
+  email: String!
+  specialization: String
+  clinic_name: String
+  phone: String
+  consultations: [Consultation]
+}
+
+# Health Records
+type MedicalRecord {
+  id: ID!
+  pet: Pet!
+  visit_date: String!
+  diagnosis: String
+  notes: String
+  prescribed_medications: [MedicationSchedule]
+}
+
+type MedicationSchedule {
+  id: ID!
+  pet: Pet!
+  medication_name: String!
+  dosage: String!          # e.g. "5mg", "1 tablet"
+  frequency: String!       # e.g. "Twice a day"
+  start_date: String!
+  end_date: String
+  is_active: Boolean!
+}
+
+# Appointments & Consultations
+type Appointment {
+  id: ID!
+  pet: Pet!
+  owner: Owner!
+  vet: Vet
+  appointment_date: String!
+  reason: String
+  status: String!          # e.g. "SCHEDULED", "COMPLETED", "CANCELLED"
+  is_virtual: Boolean!
+}
+
+type Consultation {
+  id: ID!
+  pet: Pet!
+  owner: Owner!
+  vet: Vet!
+  consultation_date: String!
+  mode: String!            # e.g. "VIRTUAL", "IN_PERSON"
+  notes: String
+  follow_up_date: String
+}
+
+# Activity & Nutrition
+type ActivityLog {
+  id: ID!
+  pet: Pet!
+  date: String!
+  activity_type: String!   # e.g. "WALK", "PLAY", "EXERCISE"
+  duration_minutes: Int
+  notes: String
+}
+
+type NutritionPlan {
+  id: ID!
+  pet: Pet!
+  diet_type: String        # e.g. "Weight Loss", "Puppy Diet"
+  daily_calories: Int
+  feeding_schedule: String # e.g. "2 meals a day"
+  notes: String
+}
+
+# Emergency & Services
+type EmergencyService {
+  id: ID!
+  name: String!
+  contact_number: String!
+  address: String
+  service_type: String     # e.g. "24x7 Clinic", "Ambulance"
+}
+
+type PetCareService {
+  id: ID!
+  name: String!
+  description: String
+  service_type: String     # e.g. "GROOMING", "BOARDING", "TRAINING"
+  location: String
+  contact_number: String
+}
+
+# Queries (examples)
+type Query {
+  pets: [Pet]
+  petById(id: ID!): Pet
+
+  owners: [Owner]
+  ownerById(id: ID!): Owner
+
+  vets: [Vet]
+  vetById(id: ID!): Vet
+
+  appointmentsByPet(petId: ID!): [Appointment]
+  consultationsByPet(petId: ID!): [Consultation]
+
+  emergencyServices: [EmergencyService]
+  petCareServices(service_type: String): [PetCareService]
+}
+
+# Mutations (examples)
+type Mutation {
+  createPet(
+    name: String!
+    species: String!
+    breed: String
+    date_of_birth: String
+    gender: String
+    ownerId: ID!
+  ): Pet!
+
+  createOwner(
+    name: String!
+    email: String!
+    phone: String
+    address: String
+  ): Owner!
+
+  createAppointment(
+    petId: ID!
+    ownerId: ID!
+    vetId: ID
+    appointment_date: String!
+    reason: String
+    is_virtual: Boolean!
+  ): Appointment!
+
+  createMedicalRecord(
+    petId: ID!
+    visit_date: String!
+    diagnosis: String
+    notes: String
+  ): MedicalRecord!
+
+  createMedicationSchedule(
+    petId: ID!
+    medication_name: String!
+    dosage: String!
+    frequency: String!
+    start_date: String!
+    end_date: String
+  ): MedicationSchedule!
+}
