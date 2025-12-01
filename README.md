@@ -88,15 +88,11 @@ The **Veterinary Health & Care Management Platform** is a service-oriented syste
 type Pet {
   id: ID!
   name: String!
-  species: String!        # e.g. Dog, Cat
+  species: String!      
   breed: String
-  date_of_birth: String
   gender: String
   owner: Owner!
-  medical_history: [MedicalRecord]
   appointments: [Appointment]
-  activity_logs: [ActivityLog]
-  nutrition_plan: NutritionPlan
 }
 
 type Owner {
@@ -128,17 +124,6 @@ type MedicalRecord {
   prescribed_medications: [MedicationSchedule]
 }
 
-type MedicationSchedule {
-  id: ID!
-  pet: Pet!
-  medication_name: String!
-  dosage: String!          
-  frequency: String!       
-  start_date: String!
-  end_date: String
-  is_active: Boolean!
-}
-
 # Appointments & Consultations
 type Appointment {
   id: ID!
@@ -162,43 +147,6 @@ type Consultation {
   follow_up_date: String
 }
 
-# Activity & Nutrition
-type ActivityLog {
-  id: ID!
-  pet: Pet!
-  date: String!
-  activity_type: String!   
-  duration_minutes: Int
-  notes: String
-}
-
-type NutritionPlan {
-  id: ID!
-  pet: Pet!
-  diet_type: String        
-  daily_calories: Int
-  feeding_schedule: String 
-  notes: String
-}
-
-# Emergency & Services
-type EmergencyService {
-  id: ID!
-  name: String!
-  contact_number: String!
-  address: String
-  service_type: String     
-}
-
-type PetCareService {
-  id: ID!
-  name: String!
-  description: String
-  service_type: String     
-  location: String
-  contact_number: String
-}
-
 # Queries (examples)
 type Query {
   pets: [Pet]
@@ -213,51 +161,6 @@ type Query {
   appointmentsByPet(petId: ID!): [Appointment]
   consultationsByPet(petId: ID!): [Consultation]
 
-  emergencyServices: [EmergencyService]
-  petCareServices(service_type: String): [PetCareService]
 }
 
-# Mutations (examples)
-type Mutation {
-  createPet(
-    name: String!
-    species: String!
-    breed: String
-    date_of_birth: String
-    gender: String
-    ownerId: ID!
-  ): Pet!
-
-  createOwner(
-    name: String!
-    email: String!
-    phone: String
-    address: String
-  ): Owner!
-
-  createAppointment(
-    petId: ID!
-    ownerId: ID!
-    vetId: ID
-    appointment_date: String!
-    reason: String
-    is_virtual: Boolean!
-  ): Appointment!
-
-  createMedicalRecord(
-    petId: ID!
-    visit_date: String!
-    diagnosis: String
-    notes: String
-  ): MedicalRecord!
-
-  createMedicationSchedule(
-    petId: ID!
-    medication_name: String!
-    dosage: String!
-    frequency: String!
-    start_date: String!
-    end_date: String
-  ): MedicationSchedule!
-}
 ```
